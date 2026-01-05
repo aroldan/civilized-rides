@@ -20,7 +20,7 @@ const { slug, routeData, shortDescription } = Astro.props;
     <h2 class="text-lg font-semibold text-stone-900 mb-2">{routeData.name}</h2>
     <div class="flex gap-4 text-sm text-stone-600 mb-3">
       <span>{formatDistance(routeData.distance)}</span>
-      <span>{formatElevation(routeData.elevationGain)} gain</span>
+      <span>{formatElevation(routeData.elevationGain)}</span>
     </div>
     <p class="text-stone-700 text-sm line-clamp-2">{shortDescription}</p>
   </div>

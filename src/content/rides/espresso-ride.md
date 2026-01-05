@@ -1,6 +1,6 @@
 ---
 ridewithgps_url: https://ridewithgps.com/routes/32714438
-short_description: A beautiful loop through Weston and Lincoln.
+short_description: A RSC-inspired loop through Weston and Lincoln
 stops:
   - type: coffee
     name: Barismo
