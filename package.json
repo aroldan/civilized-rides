@@ -1,0 +1,20 @@
+{
+  "name": "civilized-rides",
+  "version": "1.0.0",
+  "description": "Civilized bike rides around Boston",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "fetch-routes": "npx tsx scripts/fetch-routes.ts"
+  },
+  "dependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.16.6",
+    "tailwindcss": "^3.4.19"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}

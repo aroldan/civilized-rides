@@ -1,0 +1,35 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Civilized Rides</title>
+  </head>
+  <body class="bg-stone-50 text-stone-900 min-h-screen">
+    <header class="bg-stone-800 text-white py-4">
+      <nav class="container mx-auto px-4 flex items-center justify-between">
+        <a href="/" class="text-xl font-bold">Civilized Rides</a>
+        <div class="space-x-6">
+          <a href="/" class="hover:text-stone-300">Rides</a>
+          <a href="/about" class="hover:text-stone-300">About</a>
+        </div>
+      </nav>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+      <slot />
+    </main>
+    <footer class="bg-stone-800 text-stone-400 py-6 mt-12">
+      <div class="container mx-auto px-4 text-center">
+        <p>&copy; {new Date().getFullYear()} Civilized Rides</p>
+      </div>
+    </footer>
+  </body>
+</html>
