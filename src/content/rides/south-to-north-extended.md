@@ -1,5 +1,5 @@
 ---
-ridewithgps_url: https://ridewithgps.com/routes/53661949
+ridewithgps_url: https://ridewithgps.com/routes/43307445
 short_description: A weekend ride through Boston's fancy 'burbs
 stops:
   - type: coffee

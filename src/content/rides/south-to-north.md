@@ -1,5 +1,5 @@
 ---
-ridewithgps_url: https://ridewithgps.com/routes/43307445
+ridewithgps_url: https://ridewithgps.com/routes/32164637
 short_description: Circumnavigate the city and still make it to work
 stops:
   - type: coffee
