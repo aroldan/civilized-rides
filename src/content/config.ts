@@ -1,7 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 
 const stopSchema = z.object({
-  type: z.enum(['coffee', 'beer', 'food', 'sight']),
+  type: z.enum(['coffee', 'beer', 'food', 'sight', 'transportation']),
   name: z.string(),
   location: z.string(),
   url: z.string().url().optional(),

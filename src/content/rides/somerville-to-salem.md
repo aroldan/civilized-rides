@@ -6,6 +6,10 @@ stops:
     name: Tamper
     location: Medford
     url: https://www.tampercafe.com/
+  - type: sight
+    name: Harold Parker State Forest
+    location: North Andover
+    url: https://www.mass.gov/locations/harold-parker-state-forest
   - type: food
     name: Gerry's Variety
     location: Groveland
@@ -18,10 +22,14 @@ stops:
     name: Notch Brewery
     location: Salem
     url: https://www.notchbrewing.com/notchsalem
-  - type: sight
+  - type: transportation
     name: Salem Ferry
     location: Salem
     url: https://www.cityexperiences.com/boston/city-cruises/salem-ferry/
+  - type: transportation
+    name: Salem MBTA, on the Newburyport/Rockport Line
+    location: Salem
+    url: https://www.mbta.com/schedules/CR-Newburyport/timetable
 ---
 
 This is my absolute favorite route to ride on a beautiful summertime day. It starts up near Tufts university and winds its
