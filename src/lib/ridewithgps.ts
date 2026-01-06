@@ -9,6 +9,7 @@ export interface RouteData {
   locality: string;
   region: string;
   trackPoints: Array<{ lat: number; lng: number }>;
+  createdAt: number; // Unix timestamp from RideWithGPS
 }
 
 export function extractRouteId(url: string): number {
@@ -43,6 +44,7 @@ export async function fetchRouteData(routeId: number): Promise<RouteData> {
     locality: data.locality || '',
     region: data.administrative_area || '',
     trackPoints,
+    createdAt: data.created_at,
   };
 }
 
