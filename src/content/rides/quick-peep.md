@@ -1,6 +1,8 @@
 ---
 ridewithgps_url: https://ridewithgps.com/routes/41134022
 short_description: Peep some leaves on this quick loop
+tags:
+  - loop
 stops:
   - type: coffee
     name: Barismo

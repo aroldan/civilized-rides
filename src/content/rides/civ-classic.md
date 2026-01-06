@@ -1,6 +1,8 @@
 ---
 ridewithgps_url: https://ridewithgps.com/routes/53661782
 short_description: A perfect 90 minute morning loop
+tags:
+  - loop
 stops:
   - type: coffee
     name: Barismo

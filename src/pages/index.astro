@@ -51,7 +51,7 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
         It's easy to get stuck in a rut as you start to ride bikes around the Boston area, sticking to the same
         boring bike path routes or out-and-back trafficky routes that you cook up on Google Maps.
       <p>
-        Civilized Rides are here to help. These routes are hand-crafted to featuer beautiful roads with (mostly) good surface
+        Civilized Rides are here to help. These routes are hand-crafted to feature beautiful roads with (mostly) good surface
         and traffic conditions, as well as delightful stops for coffee, snacks, and other delights.
       </p>
       <p>I've personally scouted, ridden, and iterated on every ride here. The routes themselves are
@@ -61,31 +61,62 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
     </div>
   </div>
 
-  <!-- Sort Controls -->
-  <div class="mb-8 flex flex-wrap gap-4 items-center justify-between">
-    <div class="flex items-center gap-3">
-      <label for="sort-select" class="text-sm font-medium text-stone-700">
-        Sort by:
-      </label>
-      <select
-        id="sort-select"
-        class="px-4 py-2 border border-stone-300 rounded-lg bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400"
+  <!-- Sort and Filter Controls -->
+  <div class="mb-8 space-y-4">
+    <div class="flex flex-wrap gap-4 items-center justify-between">
+      <div class="flex items-center gap-3">
+        <label for="sort-select" class="text-sm font-medium text-stone-700">
+          Sort by:
+        </label>
+        <select
+          id="sort-select"
+          class="px-4 py-2 border border-stone-300 rounded-lg bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400"
+        >
+          <option value="name">Route Name</option>
+          <option value="date">Date Added</option>
+          <option value="distance">Distance</option>
+          <option value="elevation">Elevation Gain</option>
+        </select>
+      </div>
+
+      <button
+        id="sort-order-btn"
+        class="px-4 py-2 border border-stone-300 rounded-lg bg-white hover:bg-stone-50 transition-colors flex items-center gap-2"
+        aria-label="Toggle sort order"
       >
-        <option value="name">Route Name</option>
-        <option value="date">Date Added</option>
-        <option value="distance">Distance</option>
-        <option value="elevation">Elevation Gain</option>
-      </select>
+        <span id="sort-order-icon">↑</span>
+        <span id="sort-order-text">Ascending</span>
+      </button>
     </div>
 
-    <button
-      id="sort-order-btn"
-      class="px-4 py-2 border border-stone-300 rounded-lg bg-white hover:bg-stone-50 transition-colors flex items-center gap-2"
-      aria-label="Toggle sort order"
-    >
-      <span id="sort-order-icon">↑</span>
-      <span id="sort-order-text">Ascending</span>
-    </button>
+    <!-- Tag Filters -->
+    <div class="flex flex-wrap items-center gap-3">
+      <span class="text-sm font-medium text-stone-700">Filter by tag:</span>
+      <button
+        data-tag="all"
+        class="tag-filter px-3 py-1 rounded-full text-sm border transition-colors bg-stone-800 text-white border-stone-800"
+      >
+        All
+      </button>
+      <button
+        data-tag="loop"
+        class="tag-filter px-3 py-1 rounded-full text-sm border transition-colors bg-white text-stone-700 border-stone-300 hover:bg-stone-50"
+      >
+        Loop
+      </button>
+      <button
+        data-tag="point-to-point"
+        class="tag-filter px-3 py-1 rounded-full text-sm border transition-colors bg-white text-stone-700 border-stone-300 hover:bg-stone-50"
+      >
+        Point-to-Point
+      </button>
+      <button
+        data-tag="epic"
+        class="tag-filter px-3 py-1 rounded-full text-sm border transition-colors bg-white text-stone-700 border-stone-300 hover:bg-stone-50"
+      >
+        Epic
+      </button>
+    </div>
   </div>
 
   {validRides.length === 0 ? (
@@ -99,11 +130,13 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
           data-distance={routeData!.distance}
           data-elevation={routeData!.elevationGain}
           data-created={routeData!.createdAt}
+          data-tags={ride.data.tags ? ride.data.tags.join(',') : ''}
         >
           <RideCard
             slug={ride.slug}
             routeData={routeData!}
             shortDescription={ride.data.short_description}
+            tags={ride.data.tags}
           />
         </div>
       ))}
@@ -120,19 +153,28 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
   let sortField = 'name';
   let sortOrder = 'asc';
   let currentPage = 1;
+  let selectedTag = 'all';
 
   // Initialize from URL params
   function initFromURL() {
     const params = new URLSearchParams(window.location.search);
     const validSorts = ['name', 'date', 'distance', 'elevation'];
     const validOrders = ['asc', 'desc'];
+    const validTags = ['all', 'loop', 'point-to-point', 'epic'];
 
-    sortField = validSorts.includes(params.get('sort')) ? params.get('sort') : 'name';
-    sortOrder = validOrders.includes(params.get('order')) ? params.get('order') : 'asc';
-    currentPage = parseInt(params.get('page')) || 1;
+    const sortParam = params.get('sort');
+    const orderParam = params.get('order');
+    const tagParam = params.get('tag');
 
-    document.getElementById('sort-select').value = sortField;
+    sortField = sortParam && validSorts.includes(sortParam) ? sortParam : 'name';
+    sortOrder = orderParam && validOrders.includes(orderParam) ? orderParam : 'asc';
+    currentPage = parseInt(params.get('page') || '1') || 1;
+    selectedTag = tagParam && validTags.includes(tagParam) ? tagParam : 'all';
+
+    const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
+    if (sortSelect) sortSelect.value = sortField;
     updateOrderButton();
+    updateTagButtons();
   }
 
   // Update URL params without reload
@@ -140,27 +182,53 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
     const params = new URLSearchParams();
     params.set('sort', sortField);
     params.set('order', sortOrder);
+    if (selectedTag !== 'all') {
+      params.set('tag', selectedTag);
+    }
     if (currentPage > 1) {
       params.set('page', currentPage.toString());
     }
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
+  // Update tag button styles
+  function updateTagButtons() {
+    document.querySelectorAll('.tag-filter').forEach(btn => {
+      const tag = (btn as HTMLElement).dataset.tag;
+      if (tag === selectedTag) {
+        btn.className = 'tag-filter px-3 py-1 rounded-full text-sm border transition-colors bg-stone-800 text-white border-stone-800';
+      } else {
+        btn.className = 'tag-filter px-3 py-1 rounded-full text-sm border transition-colors bg-white text-stone-700 border-stone-300 hover:bg-stone-50';
+      }
+    });
+  }
+
   // Sort and paginate the ride cards
   function sortAndPaginateRides() {
     const container = document.getElementById('rides-container');
-    const cards = Array.from(container.querySelectorAll('.ride-card'));
+    if (!container) return;
+
+    const cards = Array.from(container.querySelectorAll('.ride-card')) as HTMLElement[];
+
+    // Filter by tag first
+    let filteredCards = cards;
+    if (selectedTag !== 'all') {
+      filteredCards = cards.filter(card => {
+        const tags = card.dataset.tags || '';
+        return tags.split(',').includes(selectedTag);
+      });
+    }
 
     // Sort cards
-    cards.sort((a, b) => {
+    filteredCards.sort((a, b) => {
       const dataAttr = sortField === 'date' ? 'created' : sortField;
-      let aVal = a.dataset[dataAttr];
-      let bVal = b.dataset[dataAttr];
+      let aVal: string | number = a.dataset[dataAttr] || '';
+      let bVal: string | number = b.dataset[dataAttr] || '';
 
       // Convert to numbers for numeric fields
       if (sortField !== 'name') {
-        aVal = parseFloat(aVal);
-        bVal = parseFloat(bVal);
+        aVal = parseFloat(aVal as string) || 0;
+        bVal = parseFloat(bVal as string) || 0;
       }
 
       let comparison;
@@ -171,19 +239,23 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
       return sortOrder === 'asc' ? comparison : -comparison;
     });
 
-    // Re-append in sorted order
-    cards.forEach(card => container.appendChild(card));
+    // Re-append in sorted order and hide unfiltered cards
+    filteredCards.forEach(card => container.appendChild(card));
 
     // Apply pagination (hide cards not on current page)
-    const totalPages = Math.ceil(cards.length / RIDES_PER_PAGE);
+    const totalPages = Math.ceil(filteredCards.length / RIDES_PER_PAGE);
     const startIdx = (currentPage - 1) * RIDES_PER_PAGE;
     const endIdx = startIdx + RIDES_PER_PAGE;
 
-    cards.forEach((card, idx) => {
+    // Hide all cards first
+    cards.forEach(card => {
+      card.style.display = 'none';
+    });
+
+    // Show only filtered and paginated cards
+    filteredCards.forEach((card, idx) => {
       if (idx >= startIdx && idx < endIdx) {
         card.style.display = '';
-      } else {
-        card.style.display = 'none';
       }
     });
 
@@ -192,8 +264,9 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
   }
 
   // Update pagination controls
-  function updatePaginationControls(totalPages) {
+  function updatePaginationControls(totalPages: number) {
     const container = document.getElementById('pagination-controls');
+    if (!container) return;
 
     if (totalPages <= 1) {
       container.style.display = 'none';
@@ -218,7 +291,8 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
     // Add event listeners to pagination buttons
     container.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', () => {
-        currentPage = parseInt(btn.dataset.page);
+        const pageNum = (btn as HTMLElement).dataset.page;
+        currentPage = parseInt(pageNum || '1');
         updateURL();
         sortAndPaginateRides();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -228,24 +302,43 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
 
   // Update order button display
   function updateOrderButton() {
-    document.getElementById('sort-order-icon').textContent = sortOrder === 'asc' ? '↑' : '↓';
-    document.getElementById('sort-order-text').textContent = sortOrder === 'asc' ? 'Ascending' : 'Descending';
+    const icon = document.getElementById('sort-order-icon');
+    const text = document.getElementById('sort-order-text');
+    if (icon) icon.textContent = sortOrder === 'asc' ? '↑' : '↓';
+    if (text) text.textContent = sortOrder === 'asc' ? 'Ascending' : 'Descending';
   }
 
   // Event listeners
-  document.getElementById('sort-select').addEventListener('change', (e) => {
-    sortField = e.target.value;
-    currentPage = 1; // Reset to page 1 when sorting changes
-    updateURL();
-    sortAndPaginateRides();
-  });
+  const sortSelect = document.getElementById('sort-select');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', (e) => {
+      sortField = (e.target as HTMLSelectElement).value;
+      currentPage = 1; // Reset to page 1 when sorting changes
+      updateURL();
+      sortAndPaginateRides();
+    });
+  }
 
-  document.getElementById('sort-order-btn').addEventListener('click', () => {
-    sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-    currentPage = 1; // Reset to page 1 when order changes
-    updateOrderButton();
-    updateURL();
-    sortAndPaginateRides();
+  const sortOrderBtn = document.getElementById('sort-order-btn');
+  if (sortOrderBtn) {
+    sortOrderBtn.addEventListener('click', () => {
+      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+      currentPage = 1; // Reset to page 1 when order changes
+      updateOrderButton();
+      updateURL();
+      sortAndPaginateRides();
+    });
+  }
+
+  // Tag filter event listeners
+  document.querySelectorAll('.tag-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedTag = (btn as HTMLElement).dataset.tag || 'all';
+      currentPage = 1; // Reset to page 1 when filter changes
+      updateTagButtons();
+      updateURL();
+      sortAndPaginateRides();
+    });
   });
 
   // Handle browser back/forward

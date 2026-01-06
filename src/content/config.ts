@@ -13,6 +13,7 @@ const rides = defineCollection({
     ridewithgps_url: z.string().url(),
     short_description: z.string(),
     stops: z.array(stopSchema).optional(),
+    tags: z.array(z.enum(['point-to-point', 'loop', 'epic'])).optional(),
   }),
 });
 

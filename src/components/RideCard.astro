@@ -7,9 +7,17 @@ interface Props {
   slug: string;
   routeData: RouteData;
   shortDescription: string;
+  tags?: string[];
 }
 
-const { slug, routeData, shortDescription } = Astro.props;
+const { slug, routeData, shortDescription, tags } = Astro.props;
+
+// Tag display names
+const tagLabels: Record<string, string> = {
+  'loop': 'Loop',
+  'point-to-point': 'Point-to-Point',
+  'epic': 'Epic'
+};
 ---
 
 <a href={`/rides/${slug}`} class="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden">
@@ -22,6 +30,15 @@ const { slug, routeData, shortDescription } = Astro.props;
       <span>{formatDistance(routeData.distance)}</span>
       <span>{formatElevation(routeData.elevationGain)}</span>
     </div>
+    {tags && tags.length > 0 && (
+      <div class="flex flex-wrap gap-2 mb-3">
+        {tags.map(tag => (
+          <span class="px-2 py-0.5 bg-stone-100 text-stone-700 text-xs rounded-full">
+            {tagLabels[tag] || tag}
+          </span>
+        ))}
+      </div>
+    )}
     <p class="text-stone-700 text-sm line-clamp-2">{shortDescription}</p>
   </div>
 </a>

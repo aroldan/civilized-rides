@@ -1,6 +1,8 @@
 ---
 ridewithgps_url: https://ridewithgps.com/routes/32164637
 short_description: Circumnavigate the city and still make it to work
+tags:
+  - loop
 stops:
   - type: coffee
     name: Barismo

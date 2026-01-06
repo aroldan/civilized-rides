@@ -1,6 +1,9 @@
 ---
 ridewithgps_url: https://ridewithgps.com/routes/42832312
 short_description: Roll up to Salem, drink beer, ferry home
+tags:
+  - point-to-point
+  - epic
 stops:
   - type: coffee
     name: Tamper
