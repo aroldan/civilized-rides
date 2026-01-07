@@ -1,10 +1,11 @@
 import { defineCollection, z } from 'astro:content';
 
 const stopSchema = z.object({
-  type: z.enum(['coffee', 'beer', 'food', 'sight', 'transportation']),
+  type: z.enum(['coffee', 'beer', 'food', 'sight', 'transportation', 'bike-shop']),
   name: z.string(),
   location: z.string(),
   url: z.string().url().optional(),
+  description: z.string().max(300).optional(),
 });
 
 const rides = defineCollection({

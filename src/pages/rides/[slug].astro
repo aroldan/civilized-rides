@@ -25,7 +25,8 @@ const stopIcons: Record<string, string> = {
   beer: '🍺',
   food: '🍴',
   sight: '📍',
-  transportation: '🚂'
+  transportation: '🚂',
+  'bike-shop': '🚲'
 };
 
 const stops = ride.data.stops ?? [];
@@ -78,19 +79,24 @@ const stops = ride.data.stops ?? [];
         <h2 class="text-xl font-bold mb-4">Suggested Stops</h2>
         <ul class="space-y-3">
           {stops.map((stop) => (
-            <li class="flex items-center gap-3">
+            <li class="flex items-start gap-3">
               <span class="text-2xl" title={stop.type}>{stopIcons[stop.type]}</span>
               <div>
-                {stop.url ? (
-                  <a
-                    href={stop.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-medium text-stone-900 hover:text-red-700 underline"
-                  >{stop.name}</a>
-                ) : (
-                  <span class="font-medium text-stone-900">{stop.name}</span>
-                )}<span class="text-stone-500 ml-1">in {stop.location}</span>
+                <div>
+                  {stop.url ? (
+                    <a
+                      href={stop.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-medium text-stone-900 hover:text-red-700 underline"
+                    >{stop.name}</a>
+                  ) : (
+                    <span class="font-medium text-stone-900">{stop.name}</span>
+                  )}<span class="text-stone-500 ml-1">in {stop.location}</span>
+                </div>
+                {stop.description && (
+                  <p class="text-stone-600 text-sm mt-1">{stop.description}</p>
+                )}
               </div>
             </li>
           ))}
