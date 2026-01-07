@@ -295,7 +295,6 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
         currentPage = parseInt(pageNum || '1');
         updateURL();
         sortAndPaginateRides();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
   }

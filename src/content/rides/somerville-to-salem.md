@@ -8,6 +8,7 @@ stops:
     name: Tamper
     location: Medford
     url: https://www.tampercafe.com/
+    description: A perfect place to meet; sip on espresso while you wait for friends
   - type: sight
     name: Harold Parker State Forest
     location: North Andover
@@ -16,22 +17,27 @@ stops:
     name: Gerry's Variety
     location: Groveland
     url: https://www.facebook.com/Gerrysvarietystore/
+    description: Nothing to write home about but good for a cold drink
   - type: food
     name: The Lobster Shanty
     location: Salem
     url: https://lobstershantysalem.com/
+    description: Gigantic hot and cold lobster rolls, cheap beers
   - type: beer
     name: Notch Brewery
     location: Salem
     url: https://www.notchbrewing.com/notchsalem
+    description: The best session beers
   - type: transportation
     name: Salem Ferry
     location: Salem
     url: https://www.cityexperiences.com/boston/city-cruises/salem-ferry/
+    description: The most fun ride back the city, no extra charge for bikes. They have a bar.
   - type: transportation
     name: Salem MBTA, on the Newburyport/Rockport Line
     location: Salem
     url: https://www.mbta.com/schedules/CR-Newburyport/timetable
+    description: 3 times faster and 4 times cheaper than the boat but 10 times less fun
 ---
 
 This is my absolute favorite route to ride on a beautiful summertime day. It starts up near Tufts university and winds its
