@@ -122,7 +122,7 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
   {validRides.length === 0 ? (
     <p class="text-stone-500">No rides yet. Run <code class="bg-stone-200 px-2 py-1 rounded">npm run fetch-routes</code> to load route data.</p>
   ) : (
-    <div id="rides-container" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div id="rides-container" class="flex flex-col gap-4">
       {validRides.map(({ ride, routeData }) => (
         <div
           class="ride-card"
