@@ -12,8 +12,9 @@ const allRides = await getCollection('rides');
 // Load route data for each ride
 const ridesWithData = await Promise.all(
   allRides.map(async (ride) => {
-    const routeData = await getRouteData(ride.slug);
-    return { ride, routeData };
+    const slug = ride.id.replace(/\.md$/, '');
+    const routeData = await getRouteData(slug);
+    return { ride, slug, routeData };
   })
 );
 
@@ -50,6 +51,7 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
       <p>
         It's easy to get stuck in a rut as you start to ride bikes around the Boston area, sticking to the same
         boring bike path routes or out-and-back trafficky routes that you cook up on Google Maps.
+      </p>
       <p>
         Civilized Rides are here to help. These routes are hand-crafted to feature beautiful roads with (mostly) good surface
         and traffic conditions, as well as delightful stops for coffee, snacks, and other delights.
@@ -57,6 +59,7 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
       <p>I've personally scouted, ridden, and iterated on every ride here. The routes themselves are
         high-quality, include turn-by-turn directions and POIs, and are regularly updated when I find a flaw or a road change.
         I'm proud of these rides and I hope you have a blast riding them.
+      </p>
       <p>Anthony</p>
     </div>
   </div>
@@ -123,7 +126,7 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
     <p class="text-stone-500">No rides yet. Run <code class="bg-stone-200 px-2 py-1 rounded">npm run fetch-routes</code> to load route data.</p>
   ) : (
     <div id="rides-container" class="flex flex-col gap-4">
-      {validRides.map(({ ride, routeData }) => (
+      {validRides.map(({ ride, slug, routeData }) => (
         <div
           class="ride-card"
           data-name={routeData!.name.toLowerCase()}
@@ -133,7 +136,7 @@ const paginatedRides = validRides.slice(0, RIDES_PER_PAGE);
           data-tags={ride.data.tags ? ride.data.tags.join(',') : ''}
         >
           <RideCard
-            slug={ride.slug}
+            slug={slug}
             routeData={routeData!}
             shortDescription={ride.data.short_description}
             tags={ride.data.tags}

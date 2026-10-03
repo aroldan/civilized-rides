@@ -6,15 +6,18 @@ import { getRouteData, formatDistance, formatElevation } from '../../lib/routes'
 
 export async function getStaticPaths() {
   const rides = await getCollection('rides');
-  return rides.map((ride) => ({
-    params: { slug: ride.slug },
-    props: { ride },
-  }));
+  return rides.map((ride) => {
+    const slug = ride.id.replace(/\.md$/, '');
+    return {
+      params: { slug },
+      props: { ride, slug },
+    };
+  });
 }
 
-const { ride } = Astro.props;
+const { ride, slug } = Astro.props;
 const { Content } = await render(ride);
-const routeData = await getRouteData(ride.slug);
+const routeData = await getRouteData(slug);
 
 if (!routeData) {
   return Astro.redirect('/');

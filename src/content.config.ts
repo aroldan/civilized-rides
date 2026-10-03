@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const stopSchema = z.object({
   type: z.enum(['coffee', 'beer', 'food', 'sight', 'transportation', 'bike-shop']),
@@ -9,7 +10,7 @@ const stopSchema = z.object({
 });
 
 const rides = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/rides' }),
   schema: z.object({
     ridewithgps_url: z.string().url(),
     short_description: z.string(),
